@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  codingreflex:  # Name of the service
+  codingreflex: # Name of the service
     build: .  # Build the image from the current directory
     image: renil-portfolio-service:0.0.1-SNAPSHOT
     env_file:

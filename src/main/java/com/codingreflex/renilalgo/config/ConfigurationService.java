@@ -1,11 +1,10 @@
-package com.codingreflex.renilalgo.portfolio;
+package com.codingreflex.renilalgo.config;
 
-import com.codingreflex.renilalgo.portfolio.entity.Configuration;
-import com.codingreflex.renilalgo.portfolio.repository.ConfigurationRepository;
+import com.codingreflex.renilalgo.config.entity.Configuration;
+import com.codingreflex.renilalgo.config.repository.ConfigurationRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class ConfigurationService {
@@ -45,12 +44,12 @@ public class ConfigurationService {
     }
 
 
-    public String getRefreshToken() {
-        return getConfigurationValue("refresh_token");
+    public String getRequestToken() {
+        return getConfigurationValue("request_token");
     }
 
-    public void updateRefreshToken(String newToken) {
-        updateConfigurationValue("refresh_token", newToken);
+    public void updateRequestToken(String newToken) {
+        updateConfigurationValue("request_token", newToken);
     }
 
     public String getApiKey() {

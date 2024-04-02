@@ -1,68 +1,68 @@
 plugins {
-	id 'org.springframework.boot' version '3.2.4'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
 //    id 'org.graalvm.buildtools.native' version '0.9.28'
-	id 'com.google.cloud.tools.jib' version '3.4.1'
-	id 'java'
-	id 'idea'
+    id 'com.google.cloud.tools.jib' version '3.4.1'
+    id 'java'
+    id 'idea'
 }
 
 group = 'com.codingreflex.renil'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '21'
+    sourceCompatibility = '21'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 jib {
-	from {
-		image = 'amazoncorretto:21'
-		platforms {
-			//			platform {
-			//				architecture = 'amd64'
-			//				os = 'linux'
-			//			}
-			platform {
-				architecture = 'arm64'
-				os = 'linux'
-			}
-		}
-	}
-	to {
-		image = "${project.name}:${project.version}"
-	}
-	container {
-		ports = [project.hasProperty('WEB_SERVICE_PORT') ? project.getProperty('WEB_SERVICE_PORT') : '8083']
-		environment = [ // Environment variables
-						'JAVA_OPTS': '-Xms512m -Xmx1024m',
-						'TZ'       : 'Asia/Kolkata'
-		]
-		jvmFlags = ['-Xms512m', '-Xmx1024m'] // JVM options
-	}
+    from {
+        image = 'amazoncorretto:21'
+        platforms {
+            //			platform {
+            //				architecture = 'amd64'
+            //				os = 'linux'
+            //			}
+            platform {
+                architecture = 'arm64'
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = "${project.name}:${project.version}"
+    }
+    container {
+        ports = [project.hasProperty('WEB_SERVICE_PORT') ? project.getProperty('WEB_SERVICE_PORT') : '8083']
+        environment = [ // Environment variables
+                        'JAVA_OPTS': '-Xms512m -Xmx1024m',
+                        'TZ'       : 'Asia/Kolkata'
+        ]
+        jvmFlags = ['-Xms512m', '-Xmx1024m'] // JVM options
+    }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	implementation 'org.flywaydb:flyway-core'
-	runtimeOnly 'org.postgresql:postgresql'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.flywaydb:flyway-core'
+    runtimeOnly 'org.postgresql:postgresql'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	implementation 'com.zerodhatech.kiteconnect:kiteconnect:3.4.0'
+    implementation 'com.zerodhatech.kiteconnect:kiteconnect:3.4.0'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.batch:spring-batch-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
 
 }

@@ -12,6 +12,6 @@ public class KiteProperties {
     private String apiSecret;
     private String userId;
     private String apiName;
-    private String accessToken;
+    private String refreshToken;
 }
 

@@ -1,34 +1,29 @@
 package com.codingreflex.renilalgo.portfolio;
 
-import com.codingreflex.renilalgo.config.KiteProperties;
-import com.codingreflex.renilalgo.connect.KiteConnectService;
+import com.codingreflex.renilalgo.portfolio.entity.StocksHistoricalData;
+import com.codingreflex.renilalgo.portfolio.mapper.HistoricalDataConverter;
 import com.codingreflex.renilalgo.portfolio.repository.PortfolioInstrumentRepository;
 import com.codingreflex.renilalgo.portfolio.repository.StocksHistoricalDataRepository;
+import com.zerodhatech.kiteconnect.KiteConnect;
 import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
 import com.zerodhatech.models.HistoricalData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat; 
 import java.util.Date;
 import java.util.List;
+
+import static com.codingreflex.renilalgo.common.enums.Interval.DAY;
 
 
 @Service
 @Slf4j
 public class StocksHistoricalDataService {
 
-    @Autowired
-    private KiteConnectService kiteConnectService;
 
     @Autowired
     private PortfolioInstrumentRepository portfolioInstrumentRepository;
@@ -36,63 +31,50 @@ public class StocksHistoricalDataService {
     @Autowired
     private StocksHistoricalDataRepository historicalDataRepository;
 
-    @Autowired
-    KiteProperties kiteProperties;
 
     @Autowired
-    private ConfigurationService configurationService;
+    private KiteConnect kiteConnect;
 
 
-    private static final String URL = "https://api.kite.trade/instruments/historical/14286850/minute?from=2023-12-20+09:15:00&to=2024-01-20+09:15:59";
+    public void fetchHistoricalDataForStocks() throws IOException, KiteException {
 
 
-    public void fetchHistoricalDataForStocks(int year, int month, int day, String period) {
+        List<Long> allDistinctInstrumentTokens = portfolioInstrumentRepository.findAllDistinctInstrumentTokens();
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Kite-Version", "3");
-        headers.add("Authorization", "token " + kiteProperties.getApiKey() + ":" + configurationService.getRefreshToken());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date fromDate =  new Date();
+        Date toDate = new Date();
+        try {
+            fromDate = formatter.parse("2019-09-20 09:15:00");
+            toDate = formatter.parse("2024-04-01 15:30:00");
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        log.info("Period :" + DAY + ", fromDate: " + fromDate + ", toDate: " + toDate);
 
-        ResponseEntity<String> response = restTemplate.exchange(URL, HttpMethod.GET, entity, String.class);
+        for (Long instrumentToken : allDistinctInstrumentTokens) {
+            System.out.println(String.format(" instrument token: %s", instrumentToken));
+            HistoricalData data = kiteConnect.getHistoricalData(fromDate, toDate, String.valueOf(instrumentToken), DAY.getInterval(), false, false);
+            if (data != null) {
+                List<HistoricalData> dataList = data.dataArrayList;
+                int num = dataList.size();
 
-        System.out.println("Response: " + response.getBody());
+                System.out.println("NUmber " + num);
+                if (dataList.size() > 0) {
+                    List<StocksHistoricalData> stocksHistoricalDataList =
+                            HistoricalDataConverter.convertToStocksHistoricalDataList(dataList, instrumentToken);
 
-//        List<Long> allDistinctInstrumentTokens = portfolioInstrumentRepository.findAllDistinctInstrumentTokens();
-//
-//        ZoneOffset offset = ZoneOffset.of("+05:30");
-//        long token = 4331777;
-//        OffsetDateTime from = OffsetDateTime.of(
-//                LocalDateTime.of(year, month, day, 9, 15),
-//                offset
-//        );
-//
-//        OffsetDateTime to = OffsetDateTime.now(offset);
-//        // Dates for historical data
-//        Date fromDate = new Date(from.toInstant().toEpochMilli());
-//        Date toDate = new Date(from.toInstant().toEpochMilli());
-//
-//        log.info("Period :" + period + ", fromDate: " + fromDate + ", toDate: " + toDate);
-//
-//        for (Long instrumentToken : allDistinctInstrumentTokens) {
-////            System.out.println(String.format(" instrument token: %s", instrumentToken));
-//            if (instrumentToken != 4331777) continue;
-//
-//            try {
-//                HistoricalData data = kiteConnectService.getKiteConnect().getHistoricalData(fromDate, toDate, String.valueOf(token), period, false, false);
-//                List<HistoricalData> dataList = data.dataArrayList;
-//                int num = dataList.size();
-//
-//                System.out.println("NUmber " + num);
-//                System.out.println("First: " + dataList.get(0).timeStamp + " \n last: " + dataList.get(num - 1).timeStamp + " :::: ");
-//
-////                dataPairs.add(new HistoricalDataTokenPair(data, instrumentToken));
-////                System.out.println("+++++===>>>>" + dataPairs.size());
-//            } catch (KiteException | IOException e) {
-//                e.printStackTrace(); // Handle exceptions appropriately
-//            }
-//        }
+                    historicalDataRepository.saveAll(stocksHistoricalDataList);
+                    log.info("Successfully persisted to database :" + stocksHistoricalDataList.size() + " for instrumentToken :" + instrumentToken);
+                } else {
+                    log.error("No stocks data found for instrumentToken :" + instrumentToken);
+                }
+            } else {
+                log.error("No stocks data found for instrumentToken :" + instrumentToken);
+            }
+
+        }
 
 
     }

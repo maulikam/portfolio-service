@@ -1,4 +1,4 @@
-package com.codingreflex.renilalgo.portfolio.entity;
+package com.codingreflex.renilalgo.config.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

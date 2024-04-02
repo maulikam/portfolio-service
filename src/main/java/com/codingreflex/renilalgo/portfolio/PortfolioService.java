@@ -1,17 +1,14 @@
 package com.codingreflex.renilalgo.portfolio;
 
-import com.codingreflex.renilalgo.common.enums.Interval;
-import com.codingreflex.renilalgo.config.KiteProperties;
-import com.codingreflex.renilalgo.connect.KiteConnectService;
+
+import com.codingreflex.renilalgo.config.TokenRefreshChecker;
 import com.codingreflex.renilalgo.portfolio.entity.PortfolioInstruments;
 import com.codingreflex.renilalgo.portfolio.repository.PortfolioInstrumentRepository;
 import com.zerodhatech.kiteconnect.KiteConnect;
 import com.zerodhatech.kiteconnect.kitehttp.exceptions.KiteException;
-import com.zerodhatech.models.User;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Configuration
+@Service
 public class PortfolioService {
 
 
@@ -27,40 +24,20 @@ public class PortfolioService {
 
     private final StocksHistoricalDataService stocksHistoricalDataService;
 
-    private final ConfigurationService configurationService;
-
-    private final KiteProperties kiteProperties;
-
     private final KiteConnect kiteConnect;
+
+    private final TokenRefreshChecker tokenRefreshChecker;
+
 
     @Autowired
     public PortfolioService(PortfolioInstrumentRepository portfolioInstrumentRepository,
                             StocksHistoricalDataService stocksHistoricalDataService,
-                            ConfigurationService configurationService, KiteProperties kiteProperties) {
+                            KiteConnect kiteConnect,
+                            TokenRefreshChecker tokenRefreshChecker) {
         this.portfolioInstrumentRepository = portfolioInstrumentRepository;
         this.stocksHistoricalDataService = stocksHistoricalDataService;
-        this.configurationService = configurationService;
-        this.kiteProperties = kiteProperties;
-        this.kiteConnect = new KiteConnect(kiteProperties.getApiKey());
-    }
-
-
-    @PostConstruct
-    public void fetchAndSaveInstruments() throws Exception, KiteException {
-
-        String refreshToken = configurationService.getRefreshToken();
-        String apiSecret = configurationService.getApiSecret();
-
-        User user = kiteConnect.generateSession(refreshToken, apiSecret);
-        kiteConnect.setAccessToken(user.accessToken);
-        kiteConnect.setPublicToken(user.publicToken);
-
-        configurationService.updateAccessToken(user.accessToken);
-        configurationService.updatePublicToken(user.publicToken);
-
-        configurationService.updateRefreshToken(kiteProperties.getAccessToken());
-        fetchAndSaveAllInstruments();
-        stocksHistoricalDataService.fetchHistoricalDataForStocks(2024, 1, 6, Interval.DAY.getInterval());
+        this.kiteConnect = kiteConnect;
+        this.tokenRefreshChecker = tokenRefreshChecker;
     }
 
     @Transactional
@@ -69,11 +46,11 @@ public class PortfolioService {
         long count = portfolioInstrumentRepository.count();
         System.out.println("Found total number of instruments : " + count);
 
-        if (count == 2311) {
+        if (count > 2300) {
             return portfolioInstrumentRepository.findAll();
         }
 
-        List<com.zerodhatech.models.Instrument> instrumentsFromApi = kiteConnectService.getKiteConnect().getInstruments();
+        List<com.zerodhatech.models.Instrument> instrumentsFromApi = kiteConnect.getInstruments();
 
         // Using parallel stream for mapping
         List<PortfolioInstruments> instrumentEntities = instrumentsFromApi.parallelStream()

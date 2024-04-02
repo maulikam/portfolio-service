@@ -33,8 +33,10 @@ CREATE TABLE configuration (
     value VARCHAR(255)
 );
 
-INSERT INTO configuration (key, value) VALUES ('refresh_token', '5YuQo4XKu1AcsFJD94SXnWwlIFXSpjzU');
+INSERT INTO configuration (key, value) VALUES ('request_token', '5YuQo4XKu1AcsFJD94SXnWwlIFXSpjzU');
 INSERT INTO configuration (key, value) VALUES ('apiKey', 'nhdemg5k6a43jioy');
 INSERT INTO configuration (key, value) VALUES ('apiSecret', 'bb7j0vtjysu47mfd3ntbcc022wq3or6s');
 INSERT INTO configuration (key, value) VALUES ('clientId', 'YP8452');
 INSERT INTO configuration (key, value) VALUES ('appName', 'renil');
+INSERT INTO configuration (key, value) VALUES ('access_token', 'dummy');
+INSERT INTO configuration (key, value) VALUES ('public_token', 'dummy');
