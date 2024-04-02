@@ -33,6 +33,15 @@ CREATE TABLE configuration (
     value VARCHAR(255)
 );
 
+CREATE TABLE instrument_process_log (
+    id SERIAL PRIMARY KEY,
+    instrument_token BIGINT,
+    is_successfully_processed BOOLEAN,
+    processed_count INTEGER,
+    error_message TEXT
+);
+
+
 INSERT INTO configuration (key, value) VALUES ('request_token', '5YuQo4XKu1AcsFJD94SXnWwlIFXSpjzU');
 INSERT INTO configuration (key, value) VALUES ('apiKey', 'nhdemg5k6a43jioy');
 INSERT INTO configuration (key, value) VALUES ('apiSecret', 'bb7j0vtjysu47mfd3ntbcc022wq3or6s');

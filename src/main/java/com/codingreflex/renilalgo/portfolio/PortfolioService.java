@@ -1,6 +1,7 @@
 package com.codingreflex.renilalgo.portfolio;
 
 
+import com.codingreflex.renilalgo.common.enums.Interval;
 import com.codingreflex.renilalgo.config.TokenRefreshChecker;
 import com.codingreflex.renilalgo.portfolio.entity.PortfolioInstruments;
 import com.codingreflex.renilalgo.portfolio.repository.PortfolioInstrumentRepository;
@@ -39,6 +40,12 @@ public class PortfolioService {
         this.kiteConnect = kiteConnect;
         this.tokenRefreshChecker = tokenRefreshChecker;
     }
+
+
+    public List<Long> getPortfolioInstrumentsTokens() {
+        return portfolioInstrumentRepository.findAllDistinctInstrumentTokens();
+    }
+
 
     @Transactional
     public List<PortfolioInstruments> fetchAndSaveAllInstruments() throws Exception, KiteException {

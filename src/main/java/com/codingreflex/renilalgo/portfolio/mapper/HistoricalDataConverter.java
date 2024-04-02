@@ -1,5 +1,6 @@
 package com.codingreflex.renilalgo.portfolio.mapper;
 
+import com.codingreflex.renilalgo.common.KiteUtils;
 import com.codingreflex.renilalgo.portfolio.entity.StocksHistoricalData;
 import com.zerodhatech.models.HistoricalData;
 
@@ -10,11 +11,10 @@ import java.util.stream.Collectors;
 
 public class HistoricalDataConverter {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public static List<StocksHistoricalData> convertToStocksHistoricalDataList(List<HistoricalData> historicalDataList, Long instrumentToken) {
         return historicalDataList.stream().map(data -> {
-            LocalDateTime timestamp = LocalDateTime.parse(data.timeStamp, FORMATTER);
+            LocalDateTime timestamp = LocalDateTime.parse(data.timeStamp, KiteUtils.DTF);
             return StocksHistoricalData.builder()
                     .instrumentToken(instrumentToken)
                     .timestamps(timestamp)
