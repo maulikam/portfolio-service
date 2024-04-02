@@ -1,0 +1,49 @@
+reuest:
+  token:
+    url: https://kite.zerodha.com/connect/login?v=3&api_key=nhdemg5k6a43jioy
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true '
+    show-sql: 'true'
+  application:
+    name: renil-portfolio-service
+  flyway:
+    baseline-on-migrate: 'true '
+  datasource:
+    password: adminpassword
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    url: jdbc:postgresql://db:5432/renilalgo
+
+historical:
+  data:
+    indices: NSE:NIFTY BANK,NSE:NIFTY 50,NSE:NIFTY FIN SERVICE,NSE:NIFTY MID SELECT
+
+
+kite:
+  api-key: ${API_KEY}
+  api-secret: ${API_SECRET}
+  api-name: ${APP_NAME}
+  user-id: ${CLIENT_ID}
+  refresh-token: ${REQUEST_TOKEN}
+
+allow:
+  origin: '*'
+
+request_token: ${REQUEST_TOKEN}
+
+server:
+  port: 8083
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: 'DEBUG '
+        type:
+          descriptor:
+            sql: trace
