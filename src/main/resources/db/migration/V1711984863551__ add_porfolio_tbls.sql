@@ -15,6 +15,19 @@ CREATE TABLE portfolio_instruments (
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE all_stocks_historical_data (
+    id BIGSERIAL PRIMARY KEY,
+    instrument_token BIGINT,
+    timestamps TIMESTAMP,
+    open_price NUMERIC(19, 2),
+    high_price NUMERIC(19, 2),
+    low_price NUMERIC(19, 2),
+    close_price NUMERIC(19, 2),
+    volume DOUBLE PRECISION,
+    oi BIGINT,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE stocks_historical_data (
     id BIGSERIAL PRIMARY KEY,
     instrument_token BIGINT,

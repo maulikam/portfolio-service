@@ -87,7 +87,7 @@ public class BaseController {
             @RequestParam("endDate") String endDate,
             @RequestParam("interval") Interval interval) {
         try {
-            stocksHistoricalDataService.fetchHistoricalDataForStocks(startDate, endDate, interval);
+            stocksHistoricalDataService._fetchHistoricalDataForStocks(startDate, endDate, interval);
             return ResponseEntity.ok("Historical data fetched and saved successfully");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error fetching historical data: " + e.getMessage());

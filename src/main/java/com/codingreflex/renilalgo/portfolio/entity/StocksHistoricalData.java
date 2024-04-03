@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "stocks_historical_data")
+@Table(name = "all_stocks_historical_data")
 @AllArgsConstructor
 @ToString
 @Builder
