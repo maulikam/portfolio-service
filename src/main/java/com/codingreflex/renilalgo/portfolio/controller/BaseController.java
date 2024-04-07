@@ -1,4 +1,4 @@
-package com.codingreflex.renilalgo.controller;
+package com.codingreflex.renilalgo.portfolio.controller;
 
 import com.codingreflex.renilalgo.common.enums.Interval;
 import com.codingreflex.renilalgo.portfolio.PortfolioService;
