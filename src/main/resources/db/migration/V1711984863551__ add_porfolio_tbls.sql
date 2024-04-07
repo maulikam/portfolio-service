@@ -17,6 +17,7 @@ CREATE TABLE portfolio_instruments (
 
 CREATE TABLE all_stocks_historical_data (
     id BIGSERIAL PRIMARY KEY,
+    tradingsymbol VARCHAR(100),
     instrument_token BIGINT,
     timestamps TIMESTAMP,
     open_price NUMERIC(19, 2),
