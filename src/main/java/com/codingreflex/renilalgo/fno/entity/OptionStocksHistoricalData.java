@@ -7,21 +7,21 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "all_stocks_historical_data")
+@Table(name = "option_all_stocks_historical_data")
 @AllArgsConstructor
 @ToString
 @Builder
 @NoArgsConstructor
 @Getter
 @Setter
-public class StocksHistoricalData {
+public class OptionStocksHistoricalData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "instrument_token")
-    private Long instrumentToken;
+    private String instrumentToken;
 
     @Column(name = "tradingsymbol", length = 100)
     private String tradingSymbol;

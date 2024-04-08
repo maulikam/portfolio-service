@@ -1,21 +1,22 @@
 version: '3.9'
 
 services:
-  codingreflex: # Name of the service
-    build: .  # Build the image from the current directory
+  codingreflex:
+    build: .
     image: renil-portfolio-service:0.0.1-SNAPSHOT
     env_file:
       - .env
     ports:
-      - "8083:8083"  # Map container port 8083 to host port 8083
+      - "8083:8083"
+      - "5005:5005"  # Expose port 5005 for debugging
     environment:
-      JAVA_OPTS: -Xms512m -Xmx1024m
+      JAVA_OPTS: -Xms512m -Xmx1024m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       TZ: Asia/Kolkata
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydatabase
-        - SPRING_DATASOURCE_USERNAME=myuser
-        - SPRING_DATASOURCE_PASSWORD=mypassword
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/renilalgo
+        - SPRING_DATASOURCE_USERNAME=postgres
+        - SPRING_DATASOURCE_PASSWORD=adminpassword
     depends_on:
-      - db  # Ensure database is started first
+      - db
     networks:
       - renil-algo
 

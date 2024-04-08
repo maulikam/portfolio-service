@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "merged_df")
+@Table(name = "option_merged_df")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -10,7 +10,7 @@ public class OptionInstrumentProcessLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long instrumentToken;
+    private String instrumentToken;
     @Column(name = "is_successfully_processed")
     private Boolean isSucessfullyProcessed;
     private Integer processedCount;

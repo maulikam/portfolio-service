@@ -16,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "optn_portfolio_instruments")
+@Table(name = "option_portfolio_instruments")
 public class OptionPortfolioInstruments {
 
     @Id
@@ -24,7 +24,7 @@ public class OptionPortfolioInstruments {
     private Long id;
 
     @Column(name = "instrument_token")
-    private Long instrumentToken;
+    private String instrumentToken;
 
     @Column(name = "exchange_token")
     private Long exchangeToken;
